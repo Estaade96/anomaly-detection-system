@@ -1,0 +1,68 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# =========================
+# LOAD DATA
+# =========================
+data = pd.read_csv("transactions.csv")
+data.columns = data.columns.str.strip()
+
+print("=== DATA PREVIEW ===")
+print(data.head())
+
+# =========================
+# CALCULATE STATISTICS
+# =========================
+mean_amount = data['Amount'].mean()
+std_amount = data['Amount'].std()
+
+print("\n=== STATISTICS ===")
+print(f"Mean: {mean_amount:,.2f}")
+print(f"Std Dev: {std_amount:,.2f}")
+
+# =========================
+# ANOMALY DETECTION
+# =========================
+upper_limit = mean_amount + (2 * std_amount)
+lower_limit = mean_amount - (2 * std_amount)
+
+def detect_anomaly(amount):
+    if amount > upper_limit:
+        return "High Anomaly"
+    elif amount < lower_limit:
+        return "Low Anomaly"
+    else:
+        return "Normal"
+
+data['Anomaly_Status'] = data['Amount'].apply(detect_anomaly)
+
+# =========================
+# RISK SCORE
+# =========================
+data['Risk_Score'] = (data['Amount'] - mean_amount) / std_amount
+
+# =========================
+# SUMMARY
+# =========================
+print("\n=== ANOMALY SUMMARY ===")
+print(data['Anomaly_Status'].value_counts())
+
+print("\nTop High Risk Transactions:")
+print(data.sort_values(by="Risk_Score", ascending=False).head())
+
+# =========================
+# VISUALIZATION
+# =========================
+data['Anomaly_Status'].value_counts().plot(kind='bar')
+plt.title("Transaction Anomaly Distribution")
+plt.xlabel("Category")
+plt.ylabel("Count")
+plt.tight_layout()
+plt.show()
+
+# =========================
+# SAVE OUTPUT
+# =========================
+data.to_csv("anomaly_report.csv", index=False)
+
+print("\n✔ Project 2 Complete – anomaly_report.csv saved")
