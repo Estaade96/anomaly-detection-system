@@ -53,12 +53,12 @@ The system applies statistical analysis:
 
 ## Project Structure
 anomaly-detection-system/
-│
-├── anomaly_detection.py
-├── transactions.csv
-├── anomaly_report.csv
-├── README.md
-├── requirements.txt
+
+  anomaly_detection.py
+  transactions.csv
+  anomaly_report.csv
+  README.md
+  requirements.txt
 
 ---
 
